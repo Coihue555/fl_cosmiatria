@@ -67,6 +67,7 @@ class MenuLateral extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Icon(
                       Icons.exit_to_app,
@@ -76,7 +77,7 @@ class MenuLateral extends StatelessWidget {
                       width: 15,
                     ),
                     TextWidget.headLineSmall(
-                      texto: 'Salir',
+                      texto: 'Cerrar Sesión',
                       colorTextoDark: Colors.white,
                       colorTextoLight: Colors.white,
                     ),

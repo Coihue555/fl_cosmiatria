@@ -51,38 +51,41 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      args = (ModalRoute.of(context)!.settings.arguments as Map);
+      var tempMap = ModalRoute.of(context)!.settings.arguments == null ? {} : ModalRoute.of(context)!.settings.arguments as Map;
+      args = {...tempMap};
       cargarDatos({...args});
     });
     lstPacientes = getPacientes();
   }
 
   void cargarDatos(Map<dynamic, dynamic> args) async {
-    nombreController.text = args.containsKey('uid') ? args['nombre'] : '';
-    edadController.text = args.containsKey('uid') ? args['edad'] : '';
-    tipoPielController.text = args.containsKey('uid') ? args['tipoPiel'] : '';
-    colorPielController.text = args.containsKey('uid') ? args['colorPiel'] : '';
-    texturaPielController.text = args.containsKey('uid') ? args['texturaPiel'] : '';
-    brilloPielController.text = args.containsKey('uid') ? args['brilloPiel'] : '';
-    espesorPielController.text = args.containsKey('uid') ? args['espesorPiel'] : '';
-    turgenciaPielController.text = args.containsKey('uid') ? args['turgenciaPiel'] : '';
-    hidratacionPielController.text = args.containsKey('uid') ? args['hidratacionPiel'] : '';
-    obser1Controller.text = args.containsKey('uid') ? args['observaciones1'] : '';
-    sensibilidadController.text = args.containsKey('uid') ? args['sensibilidadPiel'] : '';
-    obser2Controller.text = args.containsKey('uid') ? args['observaciones2'] : '';
-    orificiosSebaceosController.text = args.containsKey('uid') ? args['orificiosSebaceos'] : '';
-    obser3Controller.text = args.containsKey('uid') ? args['observaciones3'] : '';
-    parpadosController.text = args.containsKey('uid') ? args['parpados'] : '';
-    obser4Controller.text = args.containsKey('uid') ? args['observaciones4'] : '';
-    pigmentacionController.text = args.containsKey('uid') ? args['pigmentacion'] : '';
-    obser5Controller.text = args.containsKey('uid') ? args['observaciones5'] : '';
-    arrugasController.text = args.containsKey('uid') ? args['arrugas'] : '';
-    obser6Controller.text = args.containsKey('uid') ? args['observaciones6'] : '';
-    flacidezController.text = args.containsKey('uid') ? args['flacidez'] : '';
-    obser7Controller.text = args.containsKey('uid') ? args['observaciones7'] : '';
-    dermatosisController.text = args.containsKey('uid') ? args['dermatosis'] : '';
-    obser8Controller.text = args.containsKey('uid') ? args['observaciones8'] : '';
     if (args.containsKey('uid')) {
+      nombreController.text = args['nombre'] ?? '';
+      edadController.text = args['edad'] ?? '';
+      tipoPielController.text = args['tipoPiel'] ?? '';
+      colorPielController.text = args['colorPiel'] ?? '';
+      texturaPielController.text = args['texturaPiel'] ?? '';
+      brilloPielController.text = args['brilloPiel'] ?? '';
+      espesorPielController.text = args['espesorPiel'] ?? '';
+      turgenciaPielController.text = args['turgenciaPiel'] ?? '';
+      hidratacionPielController.text = args['hidratacionPiel'] ?? '';
+      obser1Controller.text = args['observaciones1'] ?? '';
+      sensibilidadController.text = args['sensibilidadPiel'] ?? '';
+      obser2Controller.text = args['observaciones2'] ?? '';
+      orificiosSebaceosController.text = args['orificiosSebaceos'] ?? '';
+      obser3Controller.text = args['observaciones3'] ?? '';
+      parpadosController.text = args['parpados'] ?? '';
+      obser4Controller.text = args['observaciones4'] ?? '';
+      pigmentacionController.text = args['pigmentacion'] ?? '';
+      obser5Controller.text = args['observaciones5'] ?? '';
+      arrugasController.text = args['arrugas'] ?? '';
+      obser6Controller.text = args['observaciones6'] ?? '';
+      flacidezController.text = args['flacidez'] ?? '';
+      obser7Controller.text = args['observaciones7'] ?? '';
+      dermatosisController.text = args['dermatosis'] ?? '';
+      obser8Controller.text = args['observaciones8'] ?? '';
+    }
+    if (args.containsKey('uid') && args['dermatosis'] == 'Acne') {
       var tempList = <String>[];
       for (var element in args['tipoAcne']) {
         tempList.add(element);
@@ -97,6 +100,19 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
       lstImagenes = tempList;
     }
     setState(() {});
+  }
+
+  Map<String, bool> options = {
+    "Puntos negros": false,
+    "Pápulas": false,
+    "Quistes": false,
+    "Puntos blancos": false,
+    "Pústulas": false,
+    "Nódulos": false,
+  };
+
+  List<String> getSelectedOptions() {
+    return options.entries.where((entry) => entry.value).map((entry) => entry.key).toList();
   }
 
   @override
@@ -351,21 +367,36 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
                         valorSeleccionado: dermatosisController.text,
                         onChanged: (p0) {
                           dermatosisController.text = p0;
+                          setState(() {});
                         },
                       ),
-                      if (dermatosisController.text == 'Acne')
-                        // DynamicDropDown(
-                        //   label: 'Tipos de acne:',
-                        //   lstItems: const ["Puntos negros", "Pápulas", "Quistes", "Puntos blancos", "Pústulas", "Nódulos"],
-                        //   valorSeleccionado: lstTipoAcne,
-                        //   onChanged: (p0) {
-                        //     dermatosisController.text = p0;
-                        //   },
-                        // ),
-                        TextfieldWidget.texto(
-                          labelTitulo: 'Observacion 8:',
-                          controller: obser8Controller,
-                        ),
+                      if (dermatosisController.text == 'Acne') ...[
+                        ...options.keys.map((String key) {
+                          return CheckboxListTile(
+                            controlAffinity: ListTileControlAffinity.leading,
+                            title: Text(key),
+                            value: lstTipoAcne.contains(key), // Use the value directly from options
+                            onChanged: (value) {
+                              setState(() {
+                                if (value!) {
+                                  lstTipoAcne.add(key); // Add if checked
+                                } else {
+                                  lstTipoAcne.remove(key); // Remove if unchecked
+                                }
+                              });
+                            },
+                          );
+                        }),
+                        // if (lstTipoAcne.isNotEmpty) ...[
+                        //   Text('Tipos de Acne: ${getSelectedOptions().join(', ')}'),
+                        //   //Text('Tipos de Acne: ${lstTipoAcne.join(', ')}'),
+                        //   const SizedBox(height: 20),
+                        // ]
+                      ],
+                      TextfieldWidget.texto(
+                        labelTitulo: 'Observacion 8:',
+                        controller: obser8Controller,
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

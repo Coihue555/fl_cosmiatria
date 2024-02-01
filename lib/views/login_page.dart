@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:fl_cosmiatria/theme/theme.dart';
 import 'package:fl_cosmiatria/views/auth.dart';
 import 'package:fl_cosmiatria/widgets/text/text_widget.dart';
 import 'package:fl_cosmiatria/widgets/textfield/textfield_widget.dart';

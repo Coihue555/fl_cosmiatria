@@ -124,6 +124,7 @@ class _PacientesViewState extends State<PacientesView> {
                                     "flacidez": item["flacidez"],
                                     "observaciones7": item["observaciones7"],
                                     "dermatosis": item["dermatosis"],
+                                    "tipoAcne": item["tipoAcne"],
                                     "observaciones8": item["observaciones8"],
                                     "lstImagenes": item["lstImagenes"],
                                     "uid": item['uid']
