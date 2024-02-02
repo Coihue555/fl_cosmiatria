@@ -503,6 +503,82 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
                       const SizedBox(
                         height: 10,
                       ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            'Historial Clínico:',
+                            style: TextStyle(fontSize: 17, color: ThemeModel().colorPrimario),
+                          ),
+                          InkWell(
+                            onTap: () async {
+                              await Navigator.pushNamed(context, 'fichaCaso', arguments: {"caballo": args['uid'], "desdeFicha": 'S'});
+                              setState(() {});
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white, border: Border.all(color: Colors.grey), borderRadius: const BorderRadius.all(Radius.circular(5))),
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                              child: Text(
+                                'Nuevo Caso',
+                                style: TextStyle(fontSize: 15, color: ThemeModel().colorPrimario),
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      FutureBuilder(
+                          future: getCasos(),
+                          builder: (context, snapshotCasos) {
+                            if (snapshotCasos.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshotCasos.hasError) {
+                              return Text("Errorrrr: ${snapshotCasos.error}");
+                            } else {
+                              var lstNueva = snapshotCasos.data?.where((caso) => caso['nombre'] == args['uid']).toList();
+                              return SizedBox(
+                                height: lstNueva!.isNotEmpty ? lstNueva.length * 26 : 10,
+                                child: ListView.builder(
+                                    itemCount: lstNueva.length,
+                                    itemBuilder: (context, index) {
+                                      var item = lstNueva[index];
+                                      return InkWell(
+                                          onTap: () async {
+                                            await Navigator.pushNamed(context, 'fichaCaso', arguments: {
+                                              "uid": item['uid'],
+                                              "nombre": item['nombre'],
+                                              "fechaCaso": item['fechaCaso'],
+                                              "observaciones": item['observaciones'],
+                                              "lstImagenes": item['lstImagenes'],
+                                            });
+                                            setState(() {});
+                                          },
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                children: [
+                                                  TextWidget.textLarge(
+                                                      maxlineas: 1,
+                                                      texto: item['observaciones'].toString().length < 36
+                                                          ? item['observaciones']
+                                                          : item['observaciones'].substring(0, 35) ?? ''),
+                                                  TextWidget.textLarge(texto: item['fechaCaso'] ?? ''),
+                                                ],
+                                              ),
+                                              const Divider(
+                                                thickness: 0.5,
+                                                height: 2,
+                                              )
+                                            ],
+                                          ));
+                                    }),
+                              );
+                            }
+                          })
                     ],
                   ),
                 ],

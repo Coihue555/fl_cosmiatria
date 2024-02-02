@@ -183,23 +183,23 @@ Future<List<dynamic>> filterPacientesByName(String palabra) async {
   return allPacientes.where((paciente) => paciente['nombre'].toLowerCase().contains(palabra.toLowerCase())).toList();
 }
 
-Future<List> findMatchingCases(String horseName) async {
+Future<List> findMatchingCases(String nombrePaciente) async {
   List<dynamic> lstPacientes = await getPacientes();
   List<dynamic> lstCasos = await getCasos();
 
-  if (horseName.isEmpty) {
+  if (nombrePaciente.isEmpty) {
     return lstCasos;
   } else {
     List<String> matchingPacienteUids = [];
-    for (var horse in lstPacientes) {
-      if (horse['name'].toLowerCase().contains(horseName.toLowerCase())) {
-        matchingPacienteUids.add(horse['uid']);
+    for (var paciente in lstPacientes) {
+      if (paciente['nombre'].toLowerCase().contains(nombrePaciente.toLowerCase())) {
+        matchingPacienteUids.add(paciente['uid']);
       }
     }
 
     List<Map<String, dynamic>> matchingCases = [];
     for (var caso in lstCasos) {
-      if (matchingPacienteUids.contains(caso['caballo'])) {
+      if (matchingPacienteUids.contains(caso['nombre'])) {
         matchingCases.add(caso);
       }
     }
@@ -229,7 +229,7 @@ Future<List> getCasos() async {
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     final caso = {
       "uid": doc.id,
-      "caballo": data["caballo"],
+      "nombre": data["nombre"],
       "fechaCaso": data["fechaCaso"],
       "observaciones": data["observaciones"],
       "lstImagenes": data["lstImagenes"],
@@ -238,4 +238,27 @@ Future<List> getCasos() async {
   }
 
   return casos;
+}
+
+Future<void> addCaso(
+  String nombre,
+  String fechaCaso,
+  String observaciones,
+  List<String> lstImagenes,
+) async {
+  await db.collection('casos').add({"nombre": nombre, "fechaCaso": fechaCaso, "observaciones": observaciones, "lstImagenes": lstImagenes});
+}
+
+Future<void> updateCaso(
+  String uid,
+  String nombre,
+  String fechaCaso,
+  String observaciones,
+  List<String> lstImagenes,
+) async {
+  await db.collection('casos').doc(uid).set({"nombre": nombre, "fechaCaso": fechaCaso, "observaciones": observaciones, "lstImagenes": lstImagenes});
+}
+
+Future<void> deleteCaso(String uid) async {
+  await db.collection('casos').doc(uid).delete();
 }

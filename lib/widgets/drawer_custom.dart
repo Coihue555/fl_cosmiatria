@@ -50,6 +50,18 @@ class MenuLateral extends StatelessWidget {
                   );
                 },
               ),
+              ListTile(
+                leading: const Icon(
+                  Icons.home,
+                ),
+                title: TextWidget.headLineSmall(texto: 'Casos'),
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    'lstCasos',
+                  );
+                },
+              ),
             ],
           ),
           Positioned(

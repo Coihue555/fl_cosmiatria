@@ -1,5 +1,5 @@
 import 'package:fl_cosmiatria/theme/theme.dart';
-import 'package:fl_cosmiatria/views/pacientes_view.dart';
+import 'package:fl_cosmiatria/views/paciente/pacientes_view.dart';
 import 'package:fl_cosmiatria/widgets/drawer_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

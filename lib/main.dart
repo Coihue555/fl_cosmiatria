@@ -1,10 +1,10 @@
-// ignore_for_file: file_names
-
-import 'package:fl_cosmiatria/views/ficha_paciente_view.dart';
+import 'package:fl_cosmiatria/views/casos/casos_view.dart';
+import 'package:fl_cosmiatria/views/casos/ficha_caso_view.dart';
 import 'package:fl_cosmiatria/views/home_view.dart';
-import 'package:fl_cosmiatria/views/pacientes_view.dart';
+import 'package:fl_cosmiatria/views/paciente/ficha_paciente_view.dart';
+import 'package:fl_cosmiatria/views/paciente/pacientes_view.dart';
+import 'package:fl_cosmiatria/views/paciente/solo_lectura_paciente_view.dart';
 import 'package:fl_cosmiatria/views/sesion.dart';
-import 'package:fl_cosmiatria/views/solo_lectura_paciente_view.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -28,6 +28,8 @@ class MyApp extends StatelessWidget {
       'lstPacientes': (context) => const PacientesView(),
       'fichaPaciente': (context) => const FichaPacienteView(),
       'soloLectura': (context) => const SoloLecturaView(),
+      'lstCasos': (context) => const CasosView(),
+      'fichaCaso': (context) => const FichaCasoView(),
     });
   }
 }
