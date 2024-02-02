@@ -485,7 +485,7 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextWidget.textLarge(
-                            texto: 'Subir imagenes:',
+                            texto: 'Imagenes:',
                             colorTextoDark: ThemeModel().colorPrimario,
                             colorTextoLight: ThemeModel().colorPrimario,
                           ),
