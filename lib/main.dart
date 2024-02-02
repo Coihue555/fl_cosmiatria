@@ -4,6 +4,7 @@ import 'package:fl_cosmiatria/views/ficha_paciente_view.dart';
 import 'package:fl_cosmiatria/views/home_view.dart';
 import 'package:fl_cosmiatria/views/pacientes_view.dart';
 import 'package:fl_cosmiatria/views/sesion.dart';
+import 'package:fl_cosmiatria/views/solo_lectura_paciente_view.dart';
 import 'package:flutter/material.dart';
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       "home": (context) => const Home(),
       'lstPacientes': (context) => const PacientesView(),
       'fichaPaciente': (context) => const FichaPacienteView(),
+      'soloLectura': (context) => const SoloLecturaView(),
     });
   }
 }

@@ -99,7 +99,7 @@ class _PacientesViewState extends State<PacientesView> {
                             padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
                             child: InkWell(
                                 onTap: () async {
-                                  await Navigator.pushNamed(context, 'fichaPaciente', arguments: {
+                                  await Navigator.pushNamed(context, 'soloLectura', arguments: {
                                     "usuario": user?.email,
                                     "nombre": item["nombre"],
                                     "edad": item["edad"],
