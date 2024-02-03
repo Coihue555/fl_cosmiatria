@@ -538,7 +538,7 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
                             } else if (snapshotCasos.hasError) {
                               return Text("Errorrrr: ${snapshotCasos.error}");
                             } else {
-                              var lstNueva = snapshotCasos.data?.where((caso) => caso['nombre'] == args['uid']).toList();
+                              var lstNueva = snapshotCasos.data?.where((caso) => caso.nombre == args['uid']).toList();
                               return SizedBox(
                                 height: lstNueva!.isNotEmpty ? lstNueva.length * 26 : 10,
                                 child: ListView.builder(
@@ -548,11 +548,11 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
                                       return InkWell(
                                           onTap: () async {
                                             await Navigator.pushNamed(context, 'fichaCaso', arguments: {
-                                              "uid": item['uid'],
-                                              "nombre": item['nombre'],
-                                              "fechaCaso": item['fechaCaso'],
-                                              "observaciones": item['observaciones'],
-                                              "lstImagenes": item['lstImagenes'],
+                                              "uid": item.uid,
+                                              "nombre": item.nombre,
+                                              "fechaCaso": item.fechaCaso,
+                                              "observaciones": item.observaciones,
+                                              "lstImagenes": item.lstImagenes,
                                             });
                                             setState(() {});
                                           },
@@ -563,10 +563,9 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
                                                 children: [
                                                   TextWidget.textLarge(
                                                       maxlineas: 1,
-                                                      texto: item['observaciones'].toString().length < 36
-                                                          ? item['observaciones']
-                                                          : item['observaciones'].substring(0, 35) ?? ''),
-                                                  TextWidget.textLarge(texto: item['fechaCaso'] ?? ''),
+                                                      texto:
+                                                          item.observaciones.toString().length < 36 ? item.observaciones : item.observaciones.substring(0, 35)),
+                                                  TextWidget.textLarge(texto: item.fechaCaso),
                                                 ],
                                               ),
                                               const Divider(

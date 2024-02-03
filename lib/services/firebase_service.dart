@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_cosmiatria/models/caso_model.dart';
+import 'package:fl_cosmiatria/models/paciente_model.dart'; // Assuming PacienteModel is stored here
 import 'package:fl_cosmiatria/views/auth.dart';
 
 FirebaseFirestore db = FirebaseFirestore.instance;
 final User? user = Auth().currentUser;
 
-Future<List> getPacientes() async {
-  List pacientes = [];
+Future<List<PacienteModel>> getPacientes() async {
+  List<PacienteModel> pacientes = [];
   CollectionReference collectionReferencePacientes = db.collection('pacientes');
   if (user == null) {
     return pacientes;
@@ -14,161 +16,34 @@ Future<List> getPacientes() async {
   QuerySnapshot queryPacientes = await collectionReferencePacientes.where('usuario', isEqualTo: user!.email).get();
   for (var doc in queryPacientes.docs) {
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    final paciente = {
-      "usuario": data["usuario"],
-      "nombre": data["nombre"],
-      "edad": data["edad"],
-      "tipoPiel": data["tipoPiel"],
-      "colorPiel": data["colorPiel"],
-      "texturaPiel": data["texturaPiel"],
-      "brilloPiel": data["brilloPiel"],
-      "espesorPiel": data["espesorPiel"],
-      "turgenciaPiel": data["turgenciaPiel"],
-      "hidratacionPiel": data["hidratacionPiel"],
-      "observaciones1": data["observaciones1"],
-      "sensibilidadPiel": data["sensibilidadPiel"],
-      "observaciones2": data["observaciones2"],
-      "orificiosSebaceos": data["orificiosSebaceos"],
-      "observaciones3": data["observaciones3"],
-      "parpados": data["parpados"],
-      "observaciones4": data["observaciones4"],
-      "pigmentacion": data["pigmentacion"],
-      "observaciones5": data["observaciones5"],
-      "arrugas": data["arrugas"],
-      "observaciones6": data["observaciones6"],
-      "flacidez": data["flacidez"],
-      "observaciones7": data["observaciones7"],
-      "dermatosis": data["dermatosis"],
-      "tipoAcne": data["tipoAcne"],
-      "observaciones8": data["observaciones8"],
-      "lstImagenes": data["lstImagenes"],
-      "uid": doc.id
-    };
+    PacienteModel paciente = PacienteModel.fromJson({
+      ...data,
+    });
     pacientes.add(paciente);
   }
-
   return pacientes;
 }
 
-Future<void> addPaciente(
-  String usuario,
-  String nombre,
-  String edad,
-  String tipoPiel,
-  String colorPiel,
-  String texturaPiel,
-  String brilloPiel,
-  String espesorPiel,
-  String turgenciaPiel,
-  String hidratacionPiel,
-  String observaciones1,
-  String sensibilidadPiel,
-  String observaciones2,
-  String orificiosSebaceos,
-  String observaciones3,
-  String parpados,
-  String observaciones4,
-  String pigmentacion,
-  String observaciones5,
-  String arrugas,
-  String observaciones6,
-  String flacidez,
-  String observaciones7,
-  String dermatosis,
-  List<String> tipoAcne,
-  String observaciones8,
-  List<String> lstImagenes,
-) async {
-  await db.collection('pacientes').add({
-    "usuario": usuario,
-    "nombre": nombre,
-    "edad": edad,
-    "tipoPiel": tipoPiel,
-    "colorPiel": colorPiel,
-    "texturaPiel": texturaPiel,
-    "brilloPiel": brilloPiel,
-    "espesorPiel": espesorPiel,
-    "turgenciaPiel": turgenciaPiel,
-    "hidratacionPiel": hidratacionPiel,
-    "observaciones1": observaciones1,
-    "sensibilidadPiel": sensibilidadPiel,
-    "observaciones2": observaciones2,
-    "orificiosSebaceos": orificiosSebaceos,
-    "observaciones3": observaciones3,
-    "parpados": parpados,
-    "observaciones4": observaciones4,
-    "pigmentacion": pigmentacion,
-    "observaciones5": observaciones5,
-    "arrugas": arrugas,
-    "observaciones6": observaciones6,
-    "flacidez": flacidez,
-    "observaciones7": observaciones7,
-    "dermatosis": dermatosis,
-    "tipoAcne": tipoAcne,
-    "observaciones8": observaciones8,
-    "lstImagenes": lstImagenes
-  });
+// Future<void> addPaciente(PacienteModel paciente) async {
+//   await db.collection('pacientes').add(paciente.toJson());
+// }
+Future<void> addPaciente(PacienteModel paciente) async {
+  // Generate a new document reference with an auto-generated ID
+  DocumentReference docRef = db.collection('pacientes').doc();
+
+  // Assign the generated document ID to the paciente's uid field
+  paciente.uid = docRef.id;
+
+  // Convert the PacienteModel to JSON, assuming you have a method to do this
+  // and that it includes the uid field after assignment
+  Map<String, dynamic> pacienteData = paciente.toJson();
+
+  // Set the document at the generated ID with your data
+  await docRef.set(pacienteData);
 }
 
-Future<void> updatePaciente(
-  String uid,
-  String usuario,
-  String nombre,
-  String edad,
-  String tipoPiel,
-  String colorPiel,
-  String texturaPiel,
-  String brilloPiel,
-  String espesorPiel,
-  String turgenciaPiel,
-  String hidratacionPiel,
-  String observaciones1,
-  String sensibilidadPiel,
-  String observaciones2,
-  String orificiosSebaceos,
-  String observaciones3,
-  String parpados,
-  String observaciones4,
-  String pigmentacion,
-  String observaciones5,
-  String arrugas,
-  String observaciones6,
-  String flacidez,
-  String observaciones7,
-  String dermatosis,
-  List<String> tipoAcne,
-  String observaciones8,
-  List<String> lstImagenes,
-) async {
-  await db.collection('pacientes').doc(uid).set({
-    "usuario": usuario,
-    "nombre": nombre,
-    "edad": edad,
-    "tipoPiel": tipoPiel,
-    "colorPiel": colorPiel,
-    "texturaPiel": texturaPiel,
-    "brilloPiel": brilloPiel,
-    "espesorPiel": espesorPiel,
-    "turgenciaPiel": turgenciaPiel,
-    "hidratacionPiel": hidratacionPiel,
-    "observaciones1": observaciones1,
-    "sensibilidadPiel": sensibilidadPiel,
-    "observaciones2": observaciones2,
-    "orificiosSebaceos": orificiosSebaceos,
-    "observaciones3": observaciones3,
-    "parpados": parpados,
-    "observaciones4": observaciones4,
-    "pigmentacion": pigmentacion,
-    "observaciones5": observaciones5,
-    "arrugas": arrugas,
-    "observaciones6": observaciones6,
-    "flacidez": flacidez,
-    "observaciones7": observaciones7,
-    "dermatosis": dermatosis,
-    "tipoAcne": tipoAcne,
-    "observaciones8": observaciones8,
-    "lstImagenes": lstImagenes
-  });
+Future<void> updatePaciente(PacienteModel paciente) async {
+  await db.collection('pacientes').doc(paciente.uid).set(paciente.toJson());
 }
 
 Future<void> deletePaciente(String uid) async {
@@ -180,26 +55,26 @@ Future<List<dynamic>> filterPacientesByName(String palabra) async {
   if (palabra.isEmpty) {
     return allPacientes;
   }
-  return allPacientes.where((paciente) => paciente['nombre'].toLowerCase().contains(palabra.toLowerCase())).toList();
+  return allPacientes.where((paciente) => paciente.nombre.toLowerCase().contains(palabra.toLowerCase())).toList();
 }
 
-Future<List> findMatchingCases(String nombrePaciente) async {
-  List<dynamic> lstPacientes = await getPacientes();
-  List<dynamic> lstCasos = await getCasos();
+Future<List<CasoModel>> findMatchingCases(String nombrePaciente) async {
+  List<PacienteModel> lstPacientes = await getPacientes();
+  List<CasoModel> lstCasos = await getCasos();
 
   if (nombrePaciente.isEmpty) {
     return lstCasos;
   } else {
     List<String> matchingPacienteUids = [];
     for (var paciente in lstPacientes) {
-      if (paciente['nombre'].toLowerCase().contains(nombrePaciente.toLowerCase())) {
-        matchingPacienteUids.add(paciente['uid']);
+      if (paciente.nombre.toLowerCase().contains(nombrePaciente.toLowerCase())) {
+        matchingPacienteUids.add(paciente.uid ?? '');
       }
     }
 
-    List<Map<String, dynamic>> matchingCases = [];
+    List<CasoModel> matchingCases = [];
     for (var caso in lstCasos) {
-      if (matchingPacienteUids.contains(caso['nombre'])) {
+      if (matchingPacienteUids.contains(caso.nombre)) {
         matchingCases.add(caso);
       }
     }
@@ -208,55 +83,50 @@ Future<List> findMatchingCases(String nombrePaciente) async {
 }
 
 ///Recibe un uid y retorna el valor de la clave 'label'
-Future<String>? getItemDescription(String label, String? itemUid, Future<List<dynamic>> lstItem) async {
+Future<String>? getItemDescription(String? itemUid, Future<List<dynamic>> lstItem) async {
   if (itemUid == null) return '';
-  var item = await lstItem.then((items) => items.firstWhere((item) => item['uid'] == itemUid, orElse: () => {}));
-  return item[label] ?? 'Seleccione una opcion';
+  var item = await lstItem.then((items) => items.firstWhere((item) => item.uid == itemUid, orElse: () => PacienteModel()));
+  return item.nombre ?? 'Seleccione una opcion';
 }
 
-Future<String>? getItemName(String label, String? itemUid, Future<List<dynamic>> lstItem) async {
+Future<String>? getItemName(String? itemUid, Future<List<dynamic>> lstItem) async {
   if (itemUid == null) return '';
-  var item = await lstItem.then((items) => items.firstWhere((item) => item['uid'] == itemUid, orElse: () => {}));
-  return item[label] ?? 'Seleccione una opcion';
+  var item = await lstItem.then((items) => items.firstWhere((item) => item.uid == itemUid, orElse: () => PacienteModel()));
+  return item.nombre ?? 'Seleccione una opcion';
 }
 
-Future<List> getCasos() async {
-  List casos = [];
+Future<List<CasoModel>> getCasos() async {
+  List<CasoModel> casos = [];
   CollectionReference collectionReferenceCasos = db.collection('casos');
-
-  QuerySnapshot queryCasos = await collectionReferenceCasos.get();
+  if (user == null) {
+    return casos;
+  }
+  QuerySnapshot queryCasos = await collectionReferenceCasos.where('usuario', isEqualTo: user!.email).get();
   for (var doc in queryCasos.docs) {
     final Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-    final caso = {
-      "uid": doc.id,
-      "nombre": data["nombre"],
-      "fechaCaso": data["fechaCaso"],
-      "observaciones": data["observaciones"],
-      "lstImagenes": data["lstImagenes"],
-    };
+    CasoModel caso = CasoModel.fromJson({
+      ...data,
+      //"uid": doc.id // Assuming uid is not part of your document's fields and you want to include it
+    });
     casos.add(caso);
   }
 
   return casos;
 }
 
-Future<void> addCaso(
-  String nombre,
-  String fechaCaso,
-  String observaciones,
-  List<String> lstImagenes,
-) async {
-  await db.collection('casos').add({"nombre": nombre, "fechaCaso": fechaCaso, "observaciones": observaciones, "lstImagenes": lstImagenes});
+Future<void> addCaso(CasoModel caso) async {
+  DocumentReference docRef = db.collection('casos').doc();
+  caso.uid = docRef.id;
+  // Exclude the uid when adding a new case since it's generated by Firestore
+  Map<String, dynamic> casoData = caso.toJson();
+  await docRef.set(casoData);
 }
 
-Future<void> updateCaso(
-  String uid,
-  String nombre,
-  String fechaCaso,
-  String observaciones,
-  List<String> lstImagenes,
-) async {
-  await db.collection('casos').doc(uid).set({"nombre": nombre, "fechaCaso": fechaCaso, "observaciones": observaciones, "lstImagenes": lstImagenes});
+Future<void> updateCaso(CasoModel caso) async {
+  // Ensure that the uid is not part of the data to be updated
+  Map<String, dynamic> data = caso.toJson();
+  String uid = data.remove('uid') as String; // Remove uid and save it for document reference
+  await db.collection('casos').doc(uid).set(data);
 }
 
 Future<void> deleteCaso(String uid) async {

@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_cosmiatria/models/paciente_model.dart';
 import 'package:fl_cosmiatria/services/firebase_service.dart';
 import 'package:fl_cosmiatria/theme/theme.dart';
 import 'package:fl_cosmiatria/views/auth.dart';
@@ -449,7 +450,7 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
                             } else if (snapshotCasos.hasError) {
                               return Text("Errorrrr: ${snapshotCasos.error}");
                             } else {
-                              var lstNueva = snapshotCasos.data?.where((caso) => caso['nombre'] == args['uid']).toList();
+                              var lstNueva = snapshotCasos.data?.where((caso) => caso.nombre == args['uid']).toList();
                               return SizedBox(
                                 height: lstNueva!.isNotEmpty ? lstNueva.length * 26 : 10,
                                 child: ListView.builder(
@@ -459,11 +460,11 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
                                       return InkWell(
                                           onTap: () async {
                                             await Navigator.pushNamed(context, 'fichaCaso', arguments: {
-                                              "uid": item['uid'],
-                                              "nombre": item['nombre'],
-                                              "fechaCaso": item['fechaCaso'],
-                                              "observaciones": item['observaciones'],
-                                              "lstImagenes": item['lstImagenes'],
+                                              "uid": item.uid,
+                                              "nombre": item.nombre,
+                                              "fechaCaso": item.fechaCaso,
+                                              "observaciones": item.observaciones,
+                                              "lstImagenes": item.lstImagenes,
                                             });
                                             setState(() {});
                                           },
@@ -474,10 +475,9 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
                                                 children: [
                                                   TextWidget.textLarge(
                                                       maxlineas: 1,
-                                                      texto: item['observaciones'].toString().length < 36
-                                                          ? item['observaciones']
-                                                          : item['observaciones'].substring(0, 35) ?? ''),
-                                                  TextWidget.textLarge(texto: item['fechaCaso'] ?? ''),
+                                                      texto:
+                                                          item.observaciones.toString().length < 36 ? item.observaciones : item.observaciones.substring(0, 35)),
+                                                  TextWidget.textLarge(texto: item.fechaCaso),
                                                 ],
                                               ),
                                               const Divider(
@@ -500,71 +500,71 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Nombre no pueden estar vacio')));
                           } else {
                             if (args.containsKey('uid')) {
-                              await updatePaciente(
-                                args['uid'],
-                                args['usuario'],
-                                nombreController.text,
-                                edadController.text,
-                                tipoPielController.text,
-                                colorPielController.text,
-                                texturaPielController.text,
-                                brilloPielController.text,
-                                espesorPielController.text,
-                                turgenciaPielController.text,
-                                hidratacionPielController.text,
-                                obser1Controller.text,
-                                sensibilidadController.text,
-                                obser2Controller.text,
-                                orificiosSebaceosController.text,
-                                obser3Controller.text,
-                                parpadosController.text,
-                                obser4Controller.text,
-                                pigmentacionController.text,
-                                obser5Controller.text,
-                                arrugasController.text,
-                                obser6Controller.text,
-                                flacidezController.text,
-                                obser7Controller.text,
-                                dermatosisController.text,
-                                lstTipoAcne,
-                                obser8Controller.text,
-                                lstImagenes,
-                              ).then((_) {
+                              await updatePaciente(PacienteModel(
+                                uid: args['uid'],
+                                usuario: args['usuario'],
+                                edad: edadController.text,
+                                tipoPiel: tipoPielController.text,
+                                colorPiel: colorPielController.text,
+                                texturaPiel: texturaPielController.text,
+                                brilloPiel: brilloPielController.text,
+                                espesorPiel: espesorPielController.text,
+                                turgenciaPiel: turgenciaPielController.text,
+                                hidratacionPiel: hidratacionPielController.text,
+                                observaciones1: obser1Controller.text,
+                                sensibilidadPiel: sensibilidadController.text,
+                                observaciones2: obser2Controller.text,
+                                orificiosSebaceos: orificiosSebaceosController.text,
+                                observaciones3: obser3Controller.text,
+                                parpados: parpadosController.text,
+                                observaciones4: obser4Controller.text,
+                                pigmentacion: pigmentacionController.text,
+                                observaciones5: obser5Controller.text,
+                                arrugas: arrugasController.text,
+                                observaciones6: obser6Controller.text,
+                                flacidez: flacidezController.text,
+                                observaciones7: obser7Controller.text,
+                                dermatosis: dermatosisController.text,
+                                tipoAcne: lstTipoAcne,
+                                observaciones8: obser8Controller.text,
+                                lstImagenes: lstImagenes,
+                                nombre: nombreController.text,
+                              )).then((_) {
                                 Navigator.pushNamed(
                                   context,
                                   'home',
                                 );
                               });
                             } else {
-                              addPaciente(
-                                user!.email ?? 'no-user',
-                                nombreController.text,
-                                edadController.text,
-                                tipoPielController.text,
-                                colorPielController.text,
-                                texturaPielController.text,
-                                brilloPielController.text,
-                                espesorPielController.text,
-                                turgenciaPielController.text,
-                                hidratacionPielController.text,
-                                obser1Controller.text,
-                                sensibilidadController.text,
-                                obser2Controller.text,
-                                orificiosSebaceosController.text,
-                                obser3Controller.text,
-                                parpadosController.text,
-                                obser4Controller.text,
-                                pigmentacionController.text,
-                                obser5Controller.text,
-                                arrugasController.text,
-                                obser6Controller.text,
-                                flacidezController.text,
-                                obser7Controller.text,
-                                dermatosisController.text,
-                                lstTipoAcne,
-                                obser8Controller.text,
-                                lstImagenes,
-                              ).then((_) {
+                              addPaciente(PacienteModel(
+                                usuario: user!.email ?? 'no-user',
+                                edad: edadController.text,
+                                tipoPiel: tipoPielController.text,
+                                colorPiel: colorPielController.text,
+                                texturaPiel: texturaPielController.text,
+                                brilloPiel: brilloPielController.text,
+                                espesorPiel: espesorPielController.text,
+                                turgenciaPiel: turgenciaPielController.text,
+                                hidratacionPiel: hidratacionPielController.text,
+                                observaciones1: obser1Controller.text,
+                                sensibilidadPiel: sensibilidadController.text,
+                                observaciones2: obser2Controller.text,
+                                orificiosSebaceos: orificiosSebaceosController.text,
+                                observaciones3: obser3Controller.text,
+                                parpados: parpadosController.text,
+                                observaciones4: obser4Controller.text,
+                                pigmentacion: pigmentacionController.text,
+                                observaciones5: obser5Controller.text,
+                                arrugas: arrugasController.text,
+                                observaciones6: obser6Controller.text,
+                                flacidez: flacidezController.text,
+                                observaciones7: obser7Controller.text,
+                                dermatosis: dermatosisController.text,
+                                tipoAcne: lstTipoAcne,
+                                observaciones8: obser8Controller.text,
+                                lstImagenes: lstImagenes,
+                                nombre: nombreController.text,
+                              )).then((_) {
                                 Navigator.pushNamed(
                                   context,
                                   'home',

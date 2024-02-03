@@ -1,3 +1,5 @@
+import 'package:fl_cosmiatria/models/caso_model.dart';
+import 'package:fl_cosmiatria/models/paciente_model.dart';
 import 'package:fl_cosmiatria/services/firebase_service.dart';
 import 'package:fl_cosmiatria/theme/theme.dart';
 import 'package:fl_cosmiatria/widgets/text/text_widget.dart';
@@ -12,9 +14,8 @@ class CasosView extends StatefulWidget {
 }
 
 class _CasosViewState extends State<CasosView> {
-  late Future<List<dynamic>> lstCasos;
-  late Future<List<dynamic>> lstPacientes;
-
+  late Future<List<CasoModel>> lstCasos;
+  late Future<List<PacienteModel>> lstPacientes;
   TextEditingController searchController = TextEditingController();
 
   @override
@@ -69,7 +70,7 @@ class _CasosViewState extends State<CasosView> {
                       itemBuilder: (context, index) {
                         var item = snapshotCasos.data?[index];
                         return Dismissible(
-                          key: Key(item['uid']),
+                          key: Key(item!.uid ?? ''),
                           direction: DismissDirection.endToStart,
                           confirmDismiss: (direction) async {
                             bool result = await showDialog(
@@ -106,7 +107,7 @@ class _CasosViewState extends State<CasosView> {
                             ),
                           ),
                           onDismissed: (direction) async {
-                            await deleteCaso(item['uid']);
+                            await deleteCaso(item.uid ?? '');
                             snapshotCasos.data?.removeAt(index);
                           },
                           child: Padding(
@@ -114,11 +115,12 @@ class _CasosViewState extends State<CasosView> {
                             child: InkWell(
                                 onTap: () async {
                                   await Navigator.pushNamed(context, 'fichaCaso', arguments: {
-                                    "uid": item['uid'],
-                                    "nombre": item['nombre'],
-                                    "fechaCaso": item['fechaCaso'],
-                                    "observaciones": item['observaciones'],
-                                    "lstImagenes": item['lstImagenes'],
+                                    "uid": item.uid,
+                                    "usuario": user?.email,
+                                    "nombre": item.nombre,
+                                    "fechaCaso": item.fechaCaso,
+                                    "observaciones": item.observaciones,
+                                    "lstImagenes": item.lstImagenes,
                                   });
                                   setState(() {});
                                 },
@@ -142,7 +144,7 @@ class _CasosViewState extends State<CasosView> {
                                         borderRadius: BorderRadius.circular(20),
                                       ),
                                       title: FutureBuilder(
-                                          future: getItemName('nombre', item['nombre'], lstPacientes),
+                                          future: getItemName(item.nombre, lstPacientes),
                                           builder: (context, snapshot) {
                                             if (snapshot.connectionState == ConnectionState.waiting) {
                                               return const CircularProgressIndicator();
@@ -157,7 +159,7 @@ class _CasosViewState extends State<CasosView> {
                                                       (snapshot.data == 'Seleccione una opcion')
                                                           ? TextWidget.titleMedium(texto: 'Paciente borrado')
                                                           : TextWidget.headLineSmall(texto: snapshot.data ?? ''),
-                                                      TextWidget.headLineSmall(texto: item['fechaCaso'] ?? ''),
+                                                      TextWidget.headLineSmall(texto: item.fechaCaso),
                                                     ],
                                                   ),
                                                   const Divider(
@@ -168,7 +170,7 @@ class _CasosViewState extends State<CasosView> {
                                               );
                                             }
                                           }),
-                                      subtitle: TextWidget.titleMedium(maxlineas: 2, overflow: TextOverflow.fade, texto: item['observaciones']),
+                                      subtitle: TextWidget.titleMedium(maxlineas: 2, overflow: TextOverflow.fade, texto: item.observaciones),
                                     ),
                                   ),
                                 )),

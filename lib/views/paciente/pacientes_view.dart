@@ -13,10 +13,9 @@ class PacientesView extends StatefulWidget {
 }
 
 class _PacientesViewState extends State<PacientesView> {
-  late Future<List<dynamic>> lstPacientes;
-
   TextEditingController searchController = TextEditingController();
   final User? user = Auth().currentUser;
+  late Future<List<dynamic>> lstPacientes;
 
   @override
   void initState() {
@@ -55,7 +54,7 @@ class _PacientesViewState extends State<PacientesView> {
                       itemBuilder: (context, index) {
                         var item = snapshot.data?[index];
                         return Dismissible(
-                          key: Key(item['uid']),
+                          key: Key(item.uid ?? ''),
                           direction: DismissDirection.endToStart,
                           confirmDismiss: (direction) async {
                             bool result = await showDialog(
@@ -63,7 +62,7 @@ class _PacientesViewState extends State<PacientesView> {
                                 builder: (context) {
                                   return AlertDialog(
                                     title: const Text('Confirmar'),
-                                    content: Text('Esta seguro de eliminar a ${item['nombre']}?'),
+                                    content: Text('Esta seguro de eliminar a ${item.nombre}?'),
                                     actions: [
                                       TextButton(
                                           onPressed: () {
@@ -92,7 +91,7 @@ class _PacientesViewState extends State<PacientesView> {
                             ),
                           ),
                           onDismissed: (direction) async {
-                            await deletePaciente(item['uid']);
+                            await deletePaciente(item.uid ?? '');
                             snapshot.data?.removeAt(index);
                           },
                           child: Padding(
@@ -101,33 +100,33 @@ class _PacientesViewState extends State<PacientesView> {
                                 onTap: () async {
                                   await Navigator.pushNamed(context, 'soloLectura', arguments: {
                                     "usuario": user?.email,
-                                    "nombre": item["nombre"],
-                                    "edad": item["edad"],
-                                    "tipoPiel": item["tipoPiel"],
-                                    "colorPiel": item["colorPiel"],
-                                    "texturaPiel": item["texturaPiel"],
-                                    "brilloPiel": item["brilloPiel"],
-                                    "espesorPiel": item["espesorPiel"],
-                                    "turgenciaPiel": item["turgenciaPiel"],
-                                    "hidratacionPiel": item["hidratacionPiel"],
-                                    "observaciones1": item["observaciones1"],
-                                    "sensibilidadPiel": item["sensibilidadPiel"],
-                                    "observaciones2": item["observaciones2"],
-                                    "orificiosSebaceos": item["orificiosSebaceos"],
-                                    "observaciones3": item["observaciones3"],
-                                    "parpados": item["parpados"],
-                                    "observaciones4": item["observaciones4"],
-                                    "pigmentacion": item["pigmentacion"],
-                                    "observaciones5": item["observaciones5"],
-                                    "arrugas": item["arrugas"],
-                                    "observaciones6": item["observaciones6"],
-                                    "flacidez": item["flacidez"],
-                                    "observaciones7": item["observaciones7"],
-                                    "dermatosis": item["dermatosis"],
-                                    "tipoAcne": item["tipoAcne"],
-                                    "observaciones8": item["observaciones8"],
-                                    "lstImagenes": item["lstImagenes"],
-                                    "uid": item['uid']
+                                    "nombre": item.nombre,
+                                    "edad": item.edad,
+                                    "tipoPiel": item.tipoPiel,
+                                    "colorPiel": item.colorPiel,
+                                    "texturaPiel": item.texturaPiel,
+                                    "brilloPiel": item.brilloPiel,
+                                    "espesorPiel": item.espesorPiel,
+                                    "turgenciaPiel": item.turgenciaPiel,
+                                    "hidratacionPiel": item.hidratacionPiel,
+                                    "observaciones1": item.observaciones1,
+                                    "sensibilidadPiel": item.sensibilidadPiel,
+                                    "observaciones2": item.observaciones2,
+                                    "orificiosSebaceos": item.orificiosSebaceos,
+                                    "observaciones3": item.observaciones3,
+                                    "parpados": item.parpados,
+                                    "observaciones4": item.observaciones4,
+                                    "pigmentacion": item.pigmentacion,
+                                    "observaciones5": item.observaciones5,
+                                    "arrugas": item.arrugas,
+                                    "observaciones6": item.observaciones6,
+                                    "flacidez": item.flacidez,
+                                    "observaciones7": item.observaciones7,
+                                    "dermatosis": item.dermatosis,
+                                    "tipoAcne": item.tipoAcne,
+                                    "observaciones8": item.observaciones8,
+                                    "lstImagenes": item.lstImagenes,
+                                    "uid": item.uid
                                   });
                                   setState(() {});
                                 },
@@ -150,20 +149,20 @@ class _PacientesViewState extends State<PacientesView> {
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(20),
                                       ),
-                                      leading: item['lstImagenes'][0] == ''
+                                      leading: item.lstImagenes[0] == ''
                                           ? Image.asset(
                                               'assets/no-image.jpg',
                                               fit: BoxFit.contain,
                                             )
                                           : Image.network(
-                                              item['lstImagenes'][0],
+                                              item.lstImagenes[0],
                                               fit: BoxFit.contain,
                                             ),
                                       title: Row(
                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           TextWidget.titleLarge(
-                                            texto: item['nombre'],
+                                            texto: item.nombre,
                                             maxlineas: 3,
                                             overflow: TextOverflow.fade,
                                           ),
@@ -173,7 +172,7 @@ class _PacientesViewState extends State<PacientesView> {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                          if (item['tipoPiel'] != null && item['tipoPiel'] != '') Text('Tipo de piel: ${item['tipoPiel'] ?? ''}'),
+                                          if (item.tipoPiel != null && item.tipoPiel != '') Text('Tipo de piel: ${item.tipoPiel ?? ''}'),
                                         ],
                                       ),
                                     ),

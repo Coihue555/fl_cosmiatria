@@ -6,6 +6,8 @@ import 'package:fl_cosmiatria/widgets/text/text_widget.dart';
 import 'package:fl_cosmiatria/widgets/textfield/textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fl_cosmiatria/models/caso_model.dart';
+import 'package:fl_cosmiatria/models/paciente_model.dart';
 
 class FichaCasoView extends StatefulWidget {
   const FichaCasoView({super.key});
@@ -19,36 +21,38 @@ class _FichaCasoViewState extends State<FichaCasoView> {
   TextEditingController fechaCasoController = TextEditingController();
   TextEditingController observacionesController = TextEditingController();
   List<String> lstImagenes = List<String>.filled(7, '');
-  String selectedPaciente = '';
-  late Future<List<dynamic>> lstPacientes;
+  String? selectedPaciente;
+  late CasoModel casoModel;
+  late Future<List<PacienteModel>> lstPacientes;
   late Map args = {};
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      args = (ModalRoute.of(context)!.settings.arguments as Map);
+      args = ModalRoute.of(context)!.settings.arguments == null ? {} : ModalRoute.of(context)!.settings.arguments as Map;
+
       cargarDatos({...args});
     });
     lstPacientes = getPacientes();
   }
 
   void cargarDatos(Map<dynamic, dynamic> args) async {
+    casoModel = CasoModel.fromJson({...args});
     if (args.containsKey('uid')) {
-      fechaCasoController.text = args.containsKey('uid') ? args['fechaCaso'] : '';
-      observacionesController.text = args.containsKey('uid') ? args['observaciones'] : '';
-      selectedPaciente = args['nombre'];
+      fechaCasoController.text = casoModel.fechaCaso;
+      observacionesController.text = casoModel.observaciones;
+      selectedPaciente = casoModel.nombre;
       var tempList = <String>[];
-      for (var element in args['lstImagenes']) {
+      for (var element in casoModel.lstImagenes) {
         tempList.add(element);
       }
       lstImagenes = tempList;
-      nombreController.text = selectedPaciente;
+      nombreController.text = selectedPaciente!;
     }
     if (args.containsKey('desdeFicha')) {
       if (args['desdeFicha'] == 'S') {
-        selectedPaciente = args['nombre'];
-        nombreController.text = selectedPaciente;
+        nombreController.text = casoModel.nombre;
       }
     }
     setState(() {});
@@ -56,7 +60,6 @@ class _FichaCasoViewState extends State<FichaCasoView> {
 
   @override
   void dispose() {
-    //nameController.dispose();
     observacionesController.dispose();
     fechaCasoController.dispose();
     lstImagenes.clear();
@@ -88,7 +91,7 @@ class _FichaCasoViewState extends State<FichaCasoView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       FutureBuilder(
-                          future: getItemDescription('nombre', selectedPaciente, lstPacientes),
+                          future: getItemDescription(selectedPaciente, lstPacientes),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState == ConnectionState.waiting) {
                               return const CircularProgressIndicator();
@@ -101,7 +104,7 @@ class _FichaCasoViewState extends State<FichaCasoView> {
                                 valorSeleccionado: snapshot.data,
                                 onChanged: (p0) {
                                   selectedPaciente = p0;
-                                  nombreController.text = selectedPaciente;
+                                  nombreController.text = p0;
                                 },
                               );
                             }
@@ -150,7 +153,13 @@ class _FichaCasoViewState extends State<FichaCasoView> {
                             ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('La observacion debe tener mas de 10 carácteres')));
                           } else {
                             if (args.containsKey('uid')) {
-                              await updateCaso(args['uid'], nombreController.text, fechaCasoController.text, observacionesController.text, lstImagenes)
+                              await updateCaso(CasoModel(
+                                      uid: args['uid'],
+                                      usuario: args['usuario'],
+                                      nombre: nombreController.text,
+                                      fechaCaso: fechaCasoController.text,
+                                      observaciones: observacionesController.text,
+                                      lstImagenes: lstImagenes))
                                   .then((_) {
                                 Navigator.pushNamed(
                                   context,
@@ -158,7 +167,13 @@ class _FichaCasoViewState extends State<FichaCasoView> {
                                 );
                               });
                             } else {
-                              addCaso(nombreController.text, fechaCasoController.text, observacionesController.text, lstImagenes).then((_) {
+                              addCaso(CasoModel(
+                                      usuario: user!.email ?? 'no-user',
+                                      nombre: nombreController.text,
+                                      fechaCaso: fechaCasoController.text,
+                                      observaciones: observacionesController.text,
+                                      lstImagenes: lstImagenes))
+                                  .then((_) {
                                 Navigator.pushNamed(
                                   context,
                                   'lstCasos',

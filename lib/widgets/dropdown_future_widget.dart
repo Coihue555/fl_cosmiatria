@@ -37,11 +37,11 @@ class _FutureDynamicDropDownState extends State<FutureDynamicDropDown> {
           List<DropdownMenuItem<String>> dropdownItems = (snapshot.data ?? <DropdownMenuItem<String>>[])
               .map<DropdownMenuItem<String>>(
                 (dynamic option) => DropdownMenuItem<String>(
-                  value: option['uid'],
+                  value: option.uid,
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width * 0.85,
                     child: Text(
-                      option['nombre'].toString(),
+                      option.nombre.toString(),
                       style: const TextStyle(fontSize: 14),
                     ),
                   ),
