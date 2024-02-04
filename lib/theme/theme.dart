@@ -13,6 +13,7 @@ class ThemeModel {
   late double bordeRadius = 10;
   final Color cdmBlanco = const Color.fromARGB(255, 237, 232, 228);
   final Color cdmAzul = const Color.fromARGB(255, 98, 138, 217);
+  final Color rosa = const Color.fromARGB(255, 247, 64, 125);
   late Color colorPrimario = const Color.fromARGB(255, 121, 74, 51);
 
   ///Para campos de textos dropdow y demas widget que tengan estilo similar

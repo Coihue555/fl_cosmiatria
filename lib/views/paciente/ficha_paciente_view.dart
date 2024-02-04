@@ -153,7 +153,7 @@ class _FichaPacienteViewState extends State<FichaPacienteView> {
         appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
             iconTheme: const IconThemeData(color: Colors.white),
-            backgroundColor: ThemeModel().colorPrimario,
+            backgroundColor: ThemeModel().rosa,
             title: TextWidget.titleLarge(
               texto: args.containsKey('uid') ? 'Editar Paciente' : 'Nueva Paciente',
               colorTextoDark: Colors.white,

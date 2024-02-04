@@ -72,7 +72,7 @@ class _FichaCasoViewState extends State<FichaCasoView> {
         appBar: AppBar(
             systemOverlayStyle: const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
             iconTheme: const IconThemeData(color: Colors.white),
-            backgroundColor: ThemeModel().colorPrimario,
+            backgroundColor: ThemeModel().rosa,
             title: TextWidget.titleLarge(
               texto: args.containsKey('uid') ? 'Editar Caso' : 'Nuevo Caso',
               colorTextoDark: Colors.white,

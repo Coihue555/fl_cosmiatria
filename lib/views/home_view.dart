@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
         iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: ThemeModel().colorPrimario,
+        backgroundColor: ThemeModel().rosa,
         title: const Text(
           'Cosmiatria',
           style: TextStyle(color: Colors.white),

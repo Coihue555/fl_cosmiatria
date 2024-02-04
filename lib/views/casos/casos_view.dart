@@ -31,7 +31,7 @@ class _CasosViewState extends State<CasosView> {
       appBar: AppBar(
         systemOverlayStyle: const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
         iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: ThemeModel().colorPrimario,
+        backgroundColor: ThemeModel().rosa,
         title: const Text(
           'Casos Clínicos',
           style: TextStyle(color: Colors.white),

@@ -150,7 +150,7 @@ class _SoloLecturaViewState extends State<SoloLecturaView> {
         appBar: AppBar(
           systemOverlayStyle: const SystemUiOverlayStyle(statusBarIconBrightness: Brightness.light),
           iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: ThemeModel().colorPrimario,
+          backgroundColor: ThemeModel().rosa,
           title: TextWidget.titleLarge(
             texto: 'Datos Paciente',
             colorTextoDark: Colors.white,
